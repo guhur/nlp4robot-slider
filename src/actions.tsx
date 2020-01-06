@@ -1,4 +1,4 @@
-import {State, Step, Sample, ActionTypes} from './context';
+import {State, Sample, ActionTypes} from './context';
 
 export const setWait = (dispatch: any, value: boolean) => {
   dispatch({

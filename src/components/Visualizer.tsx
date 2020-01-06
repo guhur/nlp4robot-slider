@@ -15,14 +15,18 @@ const Visualizer: React.FunctionComponent = () => {
         return (
           <>
             <h1>Ground truth</h1>
-            groundTruth.forEach( (step) => (
+          {
+            groundTruth.map( (step) => (
             <StepViewer action={step.action} state={step.state} /> ))
+          }
             <h1>Teacher forcing</h1>
-            teacherForcing.forEach( step =>{' '}
-            <StepViewer action={step.action} state={step.state} /> )
+          {
+            teacherForcing.map( step => <StepViewer action={step.action} state={step.state} /> )
+          }
             <h1>Student forcing</h1>
-            studentForcing.forEach( step =>{' '}
-            <StepViewer action={step.action} state={step.state} /> )
+          {
+            studentForcing.map( step => <StepViewer action={step.action} state={step.state} /> )
+          }
           </>
         );
       })}

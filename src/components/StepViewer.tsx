@@ -1,14 +1,18 @@
 import React from 'react';
-import d3 from 'd3';
-import {Step, NalanbotState} from '../context';
+import { select} from 'd3-selection';
+import {NalanbotState, NalanbotAction} from '../context';
 
-const StepViewer: React.FC = (props: Step) => {
+type StepViewerProps = {
+  state: NalanbotState,
+  action?: NalanbotAction
+}
+
+const StepViewer: React.FunctionComponent<StepViewerProps> = ({state, action}) => {
   const container = React.useRef(null);
 
   React.useEffect(() => {
-    const state: NalanbotState = props.state;
     if (container.current) {
-      const svg = d3.select(container.current);
+      const svg = select(container.current);
 
       // Bind bodies
       const rectangles = svg
@@ -40,7 +44,7 @@ const StepViewer: React.FC = (props: Step) => {
       // 		.style("fill", body => body.color_name);
       //
     }
-  }, [props.state, container.current]);
+  }, [state, container.current]);
 
   return <svg className="step" width={100} height={100} ref={container}/>;
 };

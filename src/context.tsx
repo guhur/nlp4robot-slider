@@ -63,8 +63,8 @@ export const defaultContext: State = {
   samples: [],
   predictions: [],
   server: {
-    askUrl: process.env.SERVER_URL_ASK,
-    predictUrl: process.env.SERVER_URL_PREDICT,
+    askUrl: process.env.REACT_APP_URL_ASK,
+    predictUrl: process.env.REACT_APP_URL_PREDICT,
   },
   manager: {
     name: '',
@@ -72,6 +72,7 @@ export const defaultContext: State = {
 };
 
 export const APIContext = createContext(defaultContext);
+console.log(defaultContext);
 
 export enum ActionTypes {
   SetManager,
