@@ -9,14 +9,18 @@ export interface NalanbotAction {
 export interface NalanbotBody {
   size: Array<number>;
   position: Array<number>;
-  orig: Array<number>;
   shape: string;
   color_name: string;
   color: Array<number>;
 }
 
+export interface NalanbotManipulator {
+  position: Array<number>;
+  orientation: Array<number>;
+}
+
 export interface NalanbotState {
-  manipulator: any;
+  manipulator: NalanbotManipulator;
   bodies: Array<NalanbotBody>;
 }
 
@@ -71,9 +75,6 @@ export const defaultContext: State = {
   },
 };
 
-export const APIContext = createContext(defaultContext);
-console.log(defaultContext);
-
 export enum ActionTypes {
   SetManager,
   SetWaiting,
@@ -87,7 +88,18 @@ export class Action {
   payload: any = {};
 }
 
+export type APIStore = {
+  state: typeof defaultContext;
+  dispatch: React.Dispatch<Action>;
+};
+
+export const APIContext = createContext<APIStore | typeof defaultContext>(
+  defaultContext,
+);
+console.log(defaultContext);
+
 export const reducer = (state: State = defaultContext, action: Action) => {
+  console.log('reducer', state);
   switch (action.type) {
     case ActionTypes.SetWaiting:
       return {
@@ -107,10 +119,7 @@ export const reducer = (state: State = defaultContext, action: Action) => {
     case ActionTypes.AddPrediction:
       return {
         ...state,
-	predictions: [
-	  ...state.predictions,
-	  action.payload
-	],
+        predictions: [...state.predictions, action.payload],
       };
     case ActionTypes.Reset:
       return defaultContext;

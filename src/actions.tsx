@@ -11,14 +11,19 @@ export const setWait = (dispatch: any, value: boolean) => {
 export const predictSample = (
   state: State,
   dispatch: any,
-  sampleId: number = -1,
+  sample: Sample,
 ) => {
   if (state.server.predictUrl) {
-    const sample: Sample = state.samples[sampleId];
     const url: RequestInfo = state.server.predictUrl;
+	  console.log(state);
+    const jsonData: string = JSON.stringify({
+        context: state.manager,
+        sample: sample,
+    });
+	    console.log(jsonData);
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify(sample),
+      body: jsonData,
     })
       .then(response => response.json())
       .then(prediction => {
@@ -36,19 +41,24 @@ export const predictSample = (
 // Action creator for getting a sample while using the API
 export const askSample = (state: State, dispatch: any) => {
   setWait(dispatch, true);
-  if (state.server.predictUrl) {
-    const url: RequestInfo = state.server.predictUrl;
+  if (state.server.askUrl) {
+    const url: RequestInfo = state.server.askUrl;
+    console.log(url);
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify(state.manager),
+      body: JSON.stringify({
+        context: state.manager,
+      }),
     })
-      .then(response => response.json())
+      .then(response => {
+        return response.json();
+      })
       .then(sample => {
         dispatch({
           type: ActionTypes.AddSample,
-          payload: sample,
+          payload: sample.resource,
         });
-        predictSample(state, dispatch, -1);
+        predictSample(state, dispatch, sample.resource);
         setWait(dispatch, false);
       })
       .catch(error => console.log(error));
