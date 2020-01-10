@@ -42,6 +42,7 @@ export interface Sample {
   color: Array<string>;
   position: Array<number>;
   states: Array<NalanbotState>;
+  sample_key: string;
 }
 
 export interface Server {
@@ -52,6 +53,7 @@ export interface Server {
 // See experiments.py
 export interface Manager {
   name: string;
+  datasetName: string;
 }
 
 export interface State {
@@ -72,6 +74,7 @@ export const defaultContext: State = {
   },
   manager: {
     name: '',
+    datasetName: '',
   },
 };
 
@@ -127,3 +130,8 @@ export const reducer = (state: State = defaultContext, action: Action) => {
       throw new Error('Unknown action');
   }
 };
+
+export interface PredictRequest {
+  sample: Sample;
+  context: Manager;
+}

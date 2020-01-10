@@ -1,4 +1,4 @@
-import {State, Sample, ActionTypes} from './context';
+import {State, Sample, ActionTypes, PredictRequest} from './context';
 
 export const setWait = (dispatch: any, value: boolean) => {
   dispatch({
@@ -8,22 +8,18 @@ export const setWait = (dispatch: any, value: boolean) => {
 };
 
 // Action creator for getting a prediction from a sample while using the API
-export const predictSample = (
-  state: State,
-  dispatch: any,
-  sample: Sample,
-) => {
+export const predictSample = (state: State, dispatch: any, sample: Sample) => {
   if (state.server.predictUrl) {
     const url: RequestInfo = state.server.predictUrl;
-	  console.log(state);
-    const jsonData: string = JSON.stringify({
-        context: state.manager,
-        sample: sample,
-    });
-	    console.log(jsonData);
+    console.log(state);
+    const data: PredictRequest = {
+      context: state.manager,
+      sample: sample,
+    };
+    console.log(data);
     fetch(url, {
       method: 'POST',
-      body: jsonData,
+      body: JSON.stringify(data),
     })
       .then(response => response.json())
       .then(prediction => {
@@ -56,7 +52,14 @@ export const askSample = (state: State, dispatch: any) => {
       .then(sample => {
         dispatch({
           type: ActionTypes.AddSample,
-          payload: sample.resource,
+          payload: sample.resource.sample,
+        });
+        dispatch({
+          type: ActionTypes.SetManager,
+	    payload: {
+		...state.manager,
+		datasetName: sample.resource.dataset_name
+	    },
         });
         predictSample(state, dispatch, sample.resource);
         setWait(dispatch, false);
